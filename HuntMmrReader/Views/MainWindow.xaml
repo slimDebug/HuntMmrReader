@@ -1,0 +1,204 @@
+﻿<Window x:Class="HuntMmrReader.Views.MainWindow"
+        x:Name="Main"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
+        xmlns:viewAddons="clr-namespace:HuntMmrReader.ViewAddons"
+        xmlns:viewModels="clr-namespace:HuntMmrReader.ViewModels"
+        xmlns:converters="clr-namespace:HuntMmrReader.Converters"
+        xmlns:models="clr-namespace:HuntMmrReader.Models"
+        mc:Ignorable="d"
+        Height="500" Width="1000"
+        Title="{Binding Title, Mode=OneWay}">
+    <Window.DataContext>
+        <viewModels:MainWindowViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <converters:BooleanToEmoticonConverter x:Key="BooleanToEmoticonConverter" />
+        <converters:IsEqualOrGreaterThanUshortVisibilityConverter x:Key="IsEqualOrGreaterThanUshortVisibilityConverter" />
+        <converters:IntToCowboyConverter x:Key="IntToCowboyConverter" />
+        <CollectionViewSource x:Key="GroupedTeams" Source="{Binding Teams}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="Id" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+    </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Key="F5" Command="{Binding ReadFileCommand}" CommandParameter="{Binding FilePath}" />
+    </Window.InputBindings>
+    <behaviors:Interaction.Triggers>
+        <behaviors:EventTrigger EventName="Closing">
+            <behaviors:InvokeCommandAction Command="{Binding CloseEventCommand}" />
+        </behaviors:EventTrigger>
+    </behaviors:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="9*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Reload" Command="{Binding ReadFileCommand}" CommandParameter="{Binding FilePath}" />
+                <Separator />
+                <MenuItem Header="_Exit" Command="{Binding CloseWindowCommand, Mode=OneWay}"
+                          CommandParameter="{Binding ElementName=Main}" />
+            </MenuItem>
+            <MenuItem Header="_Settings">
+                <MenuItem Header="_Edit Path..." Command="{Binding GetFilePathCommand}" />
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_Open repository" Command="{Binding OpenRepositoryCommand}" />
+            </MenuItem>
+        </Menu>
+        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}Path: {0}">
+                    <Binding Path="FilePath" Mode="OneWay" />
+                </MultiBinding>
+            </TextBlock.Text>
+            <TextBlock.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="_Open Folder" Command="{Binding OpenFolderCommand}"
+                              CommandParameter="{Binding FilePath}" />
+                </ContextMenu>
+            </TextBlock.ContextMenu>
+        </TextBlock>
+        <ScrollViewer Grid.Row="2" Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="0,0,15,0">
+            <StackPanel>
+                <TextBlock Text="{Binding Exceptions, Mode=OneWay}" TextWrapping="Wrap" Foreground="Red" />
+            </StackPanel>
+        </ScrollViewer>
+        <Button Command="{Binding ClearErrorsCommand}" VerticalAlignment="Top" Grid.Row="2" Grid.Column="1"
+                Margin="0,0,5,0">
+            Clear Errors
+        </Button>
+        <DataGrid ItemsSource="{Binding Source={StaticResource GroupedTeams}}" AutoGenerateColumns="False"
+                  CanUserAddRows="False" CanUserDeleteRows="False" Grid.Row="3" Grid.Column="0"
+                  Grid.ColumnSpan="2" IsReadOnly="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  ScrollViewer.CanContentScroll="False" HeadersVisibility="None">
+            <DataGrid.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.ContainerStyle>
+                        <Style TargetType="{x:Type GroupItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type GroupItem}">
+                                        <Expander IsExpanded="True">
+                                            <Expander.Header>
+                                                <emoji:TextBlock d:DataContext="{d:DesignInstance CollectionViewGroup}">
+                                                    <emoji:TextBlock.Text>
+                                                        <MultiBinding
+                                                            StringFormat="{}Team: {0,2} | {1,3} | Random Team: {2} | MMR: {3,4} | Skill-based Matchmaking: {4}">
+                                                            <Binding Path="Items[0].(models:HuntTeam.Id)" />
+                                                            <Binding
+                                                                Path="Items[0].(models:HuntTeam.TeamSize)"
+                                                                Converter="{StaticResource IntToCowboyConverter}" />
+                                                            <Binding
+                                                                Path="Items[0].(models:HuntTeam.RandomTeam)"
+                                                                Converter="{StaticResource BooleanToEmoticonConverter}" />
+                                                            <Binding Path="Items[0].(models:HuntTeam.Mmr)" />
+                                                            <Binding
+                                                                Path="Items[0].(models:HuntTeam.SkillBasedMatchMakingEnabled)"
+                                                                Converter="{StaticResource BooleanToEmoticonConverter}" />
+                                                        </MultiBinding>
+                                                    </emoji:TextBlock.Text>
+                                                </emoji:TextBlock>
+                                            </Expander.Header>
+                                            <Expander.Content>
+                                                <ItemsPresenter />
+                                            </Expander.Content>
+                                        </Expander>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GroupStyle.ContainerStyle>
+                </GroupStyle>
+            </DataGrid.GroupStyle>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="models:HuntTeam">
+                            <DataGrid AutoGenerateColumns="False"
+                                      CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True"
+                                      ItemsSource="{Binding Members}"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                      ScrollViewer.VerticalScrollBarVisibility="Disabled" HeadersVisibility="Column">
+                                <behaviors:Interaction.Behaviors>
+                                    <viewAddons:BubbleScrollEvent />
+                                </behaviors:Interaction.Behaviors>
+                                <DataGrid.ColumnHeaderStyle>
+                                    <Style TargetType="{x:Type DataGridColumnHeader}">
+                                        <Setter Property="FontWeight" Value="Bold" />
+                                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                    </Style>
+                                </DataGrid.ColumnHeaderStyle>
+                                <DataGrid.CellStyle>
+                                    <Style TargetType="{x:Type DataGridCell}">
+                                        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+                                    </Style>
+                                </DataGrid.CellStyle>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
+                                    <DataGridTextColumn Header="MMR" Binding="{Binding Mmr}" Width="Auto" />
+                                    <DataGridTemplateColumn Header="Stars" Width="Auto">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate DataType="models:HuntPlayer">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Source="{StaticResource StarDrawingImage}"
+                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter=0}" />
+                                                    <Image Source="{StaticResource StarDrawingImage}"
+                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter=2000}" />
+                                                    <Image Source="{StaticResource StarDrawingImage}"
+                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter=2300}" />
+                                                    <Image Source="{StaticResource StarDrawingImage}"
+                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter=2600}" />
+                                                    <Image Source="{StaticResource StarDrawingImage}"
+                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter=2750}" />
+                                                    <Image Source="{StaticResource StarDrawingImage}"
+                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter=3000}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Bounty Carrier" Width="Auto">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate DataType="models:HuntPlayer">
+                                                <emoji:TextBlock
+                                                    Text="{Binding HadBounty, Converter={StaticResource BooleanToEmoticonConverter}}"
+                                                    HorizontalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Wellspring" Width="Auto">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate DataType="models:HuntPlayer">
+                                                <emoji:TextBlock
+                                                    Text="{Binding HadWellSpring, Converter={StaticResource BooleanToEmoticonConverter}}"
+                                                    HorizontalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Killed by me X times" Binding="{Binding KilledByMe}"
+                                                        Width="Auto" />
+                                    <DataGridTextColumn Header="Killed me X times" Binding="{Binding KilledMe}"
+                                                        Width="Auto" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

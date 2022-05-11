@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DrawingImage x:Key="StarDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M-0.5,-0.5 V31.5 H36.5 V-0.5 H-0.5 Z">
+                <DrawingGroup.Transform>
+                    <TranslateTransform X="0.5" Y="0.5" />
+                </DrawingGroup.Transform>
+                <DrawingGroup Opacity="1">
+                    <GeometryDrawing Brush="Yellow"
+                                     Geometry="F1 M37,32z M0,0z M1,12L14.41,12 18.5,1 22.59,12 36,12 25.32,19.37 29.55,31 18.5,23.8 7.45,31 11.68,19.37z">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="Black" Thickness="2" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter"
+                                 MiterLimit="10" />
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+</ResourceDictionary>
