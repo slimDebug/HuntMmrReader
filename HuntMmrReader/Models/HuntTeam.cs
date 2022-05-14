@@ -21,7 +21,7 @@ internal class HuntTeam : HuntBaseEntity
         List<HuntPlayer> teamMembers) : base(mmr, id)
     {
         _members = teamMembers;
-        RandomTeam = !(bool.TryParse(inviteTeam, out var parsedInviteTeam) && parsedInviteTeam);
+        RandomTeam = !(bool.TryParse(inviteTeam, out var parsedInviteTeam) && parsedInviteTeam) && teamMembers.Count != 1;
         SkillBasedMatchMakingEnabled =
             bool.TryParse(skillBasedMatchMakingEnabled, out var parsedSkillBasedMatchMakingEnabled) &&
             parsedSkillBasedMatchMakingEnabled;
