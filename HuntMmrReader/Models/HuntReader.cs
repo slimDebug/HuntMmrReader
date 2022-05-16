@@ -206,7 +206,7 @@ internal class HuntReader : ObservableObject, IDisposable
         return teams;
     }
 
-    private XAttribute? GetAttributeByName(XContainer doc, string elementName)
+    private static XAttribute? GetAttributeByName(XContainer doc, string elementName)
     {
         return (from entry in doc.Descendants("Attr")
             where entry.Attribute("name")?.Value == elementName

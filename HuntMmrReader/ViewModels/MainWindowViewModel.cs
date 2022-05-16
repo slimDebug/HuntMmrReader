@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
+using System.Linq;
 using System.Windows;
 using HuntMmrReader.DesignHelper;
 using HuntMmrReader.Models;
@@ -18,29 +18,30 @@ internal class MainWindowViewModel : ViewModelBase
 {
     internal const string BaseTitle = "Hunt MMR Reader";
 
-    private readonly StringBuilder _exceptionsBuilder;
-
     private readonly HuntReader _reader;
     private string _filePath;
     private DateTime _lastRefreshTime;
+    private DisplayException _selectedDisplayException;
     private ObservableCollection<HuntTeam> _teams;
     private string _title = BaseTitle;
 
     public MainWindowViewModel()
     {
-        _exceptionsBuilder = new StringBuilder();
         _teams = new ObservableCollection<HuntTeam>();
+        Exceptions = new ObservableCollection<DisplayException>();
         GetFilePathCommand = new RelayCommand<object>(SelectFile);
         ReadFileCommand = new RelayCommand<string>(FillHunters, CheckIfFileExists);
         CloseWindowCommand = new RelayCommand<Window>(CloseWindow);
         CloseEventCommand = new RelayCommand<object>(CloseEventHandling);
-        ClearErrorsCommand = new RelayCommand<object>(ClearExceptions, _ => _exceptionsBuilder.Length != 0);
+        ClearErrorsCommand = new RelayCommand<object>(ClearExceptions, _ => Exceptions.Any());
         OpenFolderCommand = new RelayCommand<string>(OpenFolder, CheckIfFileExists);
+        ClipboardCopyCommand = new RelayCommand<string>(CopyToClipboard);
         AboutCommand = new RelayCommand<Window>(OpenAbout);
         _reader = new HuntReader(TimeSpan.FromSeconds(3));
         _reader.PropertyChanged += Reader_PropertyChanged;
         _reader.ExceptionRaised += Reader_ExceptionRaised;
         _filePath = "";
+        _selectedDisplayException = new DisplayException(typeof(DisplayException), "default Exception", default);
         try
         {
             FilePath = Settings.Default.LastPath;
@@ -52,6 +53,12 @@ internal class MainWindowViewModel : ViewModelBase
 
         if (!string.IsNullOrEmpty(FilePath))
             _reader.Read(FilePath);
+    }
+
+    public DisplayException SelectedDisplayException
+    {
+        get => _selectedDisplayException;
+        set => SetProperty(ref _selectedDisplayException, value);
     }
 
     public string Title
@@ -86,6 +93,8 @@ internal class MainWindowViewModel : ViewModelBase
         set => SetProperty(ref _teams, value);
     }
 
+    public ObservableCollection<DisplayException> Exceptions { get; }
+
     public RelayCommand<object> GetFilePathCommand { get; }
 
     public RelayCommand<string> ReadFileCommand { get; }
@@ -98,9 +107,9 @@ internal class MainWindowViewModel : ViewModelBase
 
     public RelayCommand<string> OpenFolderCommand { get; }
 
-    public RelayCommand<Window> AboutCommand { get; }
+    public RelayCommand<string> ClipboardCopyCommand { get; }
 
-    public string Exceptions => _exceptionsBuilder.ToString();
+    public RelayCommand<Window> AboutCommand { get; }
 
     private void Reader_ExceptionRaised(object? sender, Exception e)
     {
@@ -139,13 +148,12 @@ internal class MainWindowViewModel : ViewModelBase
         await _reader.ReadAsync(FilePath).ConfigureAwait(false);
     }
 
-    // ReSharper disable once MemberCanBeMadeStatic.Local
-    private void CloseWindow(Window window)
+    private static void CloseWindow(Window window)
     {
         window.Close();
     }
 
-    private void OpenAbout(Window window)
+    private static void OpenAbout(Window window)
     {
         var aboutWindow = new AboutWindow {Owner = window};
         aboutWindow.ShowDialog();
@@ -164,14 +172,12 @@ internal class MainWindowViewModel : ViewModelBase
 
     private void AddException(Exception ex)
     {
-        _exceptionsBuilder.AppendLine($"{ex.GetBaseException().GetType()}: {ex.Message}");
-        OnPropertyChanged(nameof(Exceptions));
+        Exceptions.Add(new DisplayException(ex.GetBaseException().GetType(), ex.Message, ex.StackTrace));
     }
 
     private void ClearExceptions(object _)
     {
-        _exceptionsBuilder.Clear();
-        OnPropertyChanged(nameof(Exceptions));
+        Exceptions.Clear();
     }
 
     private void OpenFolder(string path)
@@ -199,8 +205,12 @@ internal class MainWindowViewModel : ViewModelBase
         }
     }
 
-    // ReSharper disable once MemberCanBeMadeStatic.Local
-    private bool CheckIfFileExists(string path)
+    private static void CopyToClipboard(string text)
+    {
+        Clipboard.SetText(text);
+    }
+
+    private static bool CheckIfFileExists(string path)
     {
         return !string.IsNullOrEmpty(path) && path.IndexOfAny(Path.GetInvalidPathChars()) == -1 && File.Exists(path);
     }

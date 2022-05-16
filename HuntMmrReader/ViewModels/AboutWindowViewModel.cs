@@ -39,7 +39,7 @@ internal class AboutWindowViewModel : ViewModelBase
             : default;
     }
 
-    private void OpenRepository(string url)
+    private static void OpenRepository(string url)
     {
         var startInfo = new ProcessStartInfo(url)
         {

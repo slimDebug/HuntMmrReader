@@ -38,8 +38,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="9*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="8*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -74,13 +74,25 @@
                 </ContextMenu>
             </TextBlock.ContextMenu>
         </TextBlock>
-        <ScrollViewer Grid.Row="2" Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="0,0,15,0">
-            <StackPanel>
-                <TextBlock Text="{Binding Exceptions, Mode=OneWay}" TextWrapping="Wrap" Foreground="Red" />
-            </StackPanel>
-        </ScrollViewer>
-        <Button Command="{Binding ClearErrorsCommand}" VerticalAlignment="Top" Grid.Row="2" Grid.Column="1"
-                Margin="0,0,5,0">
+        <DataGrid ItemsSource="{Binding Exceptions}" AutoGenerateColumns="False"
+                  CanUserAddRows="False" CanUserDeleteRows="False" Grid.Row="2" Grid.Column="0" IsReadOnly="True"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  ScrollViewer.CanContentScroll="False" SelectedItem="{Binding SelectedDisplayException, Mode=TwoWay}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Time" Binding="{Binding CreationTime}" Width="Auto" Foreground="Red" />
+                <DataGridTextColumn Header="Exception" Binding="{Binding BaseException}" Width="Auto" Foreground="Red" />
+                <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*" Foreground="Red" />
+            </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="_Copy Stack trace to clipboard" Command="{Binding ClipboardCopyCommand}"
+                              CommandParameter="{Binding SelectedDisplayException.StackTrace}">
+                    </MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+        <Button Command="{Binding ClearErrorsCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Grid.Row="2" Grid.Column="1">
             Clear Errors
         </Button>
         <DataGrid ItemsSource="{Binding Source={StaticResource GroupedTeams}}" AutoGenerateColumns="False"
