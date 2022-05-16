@@ -57,7 +57,8 @@
                 <MenuItem Header="_Edit Path..." Command="{Binding GetFilePathCommand}" />
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="_Open repository" Command="{Binding OpenRepositoryCommand}" />
+                <MenuItem Header="_About" Command="{Binding AboutCommand}"
+                          CommandParameter="{Binding ElementName=Main}" />
             </MenuItem>
         </Menu>
         <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">

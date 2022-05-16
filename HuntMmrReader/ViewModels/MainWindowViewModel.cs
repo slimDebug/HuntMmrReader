@@ -9,14 +9,14 @@ using System.Windows;
 using HuntMmrReader.DesignHelper;
 using HuntMmrReader.Models;
 using HuntMmrReader.Properties;
+using HuntMmrReader.Views;
 using Microsoft.Win32;
 
 namespace HuntMmrReader.ViewModels;
 
 internal class MainWindowViewModel : ViewModelBase
 {
-    private const string BaseTitle = "Hunt MMR Reader";
-    private const string RepositoryUrl = "https://github.com/slimDebug/HuntMmrReader";
+    internal const string BaseTitle = "Hunt MMR Reader";
 
     private readonly StringBuilder _exceptionsBuilder;
 
@@ -31,12 +31,12 @@ internal class MainWindowViewModel : ViewModelBase
         _exceptionsBuilder = new StringBuilder();
         _teams = new ObservableCollection<HuntTeam>();
         GetFilePathCommand = new RelayCommand<object>(SelectFile);
-        OpenRepositoryCommand = new RelayCommand<object>(OpenRepository);
         ReadFileCommand = new RelayCommand<string>(FillHunters, CheckIfFileExists);
         CloseWindowCommand = new RelayCommand<Window>(CloseWindow);
         CloseEventCommand = new RelayCommand<object>(CloseEventHandling);
         ClearErrorsCommand = new RelayCommand<object>(ClearExceptions, _ => _exceptionsBuilder.Length != 0);
         OpenFolderCommand = new RelayCommand<string>(OpenFolder, CheckIfFileExists);
+        AboutCommand = new RelayCommand<Window>(OpenAbout);
         _reader = new HuntReader(TimeSpan.FromSeconds(3));
         _reader.PropertyChanged += Reader_PropertyChanged;
         _reader.ExceptionRaised += Reader_ExceptionRaised;
@@ -88,8 +88,6 @@ internal class MainWindowViewModel : ViewModelBase
 
     public RelayCommand<object> GetFilePathCommand { get; }
 
-    public RelayCommand<object> OpenRepositoryCommand { get; }
-
     public RelayCommand<string> ReadFileCommand { get; }
 
     public RelayCommand<Window> CloseWindowCommand { get; }
@@ -99,6 +97,8 @@ internal class MainWindowViewModel : ViewModelBase
     public RelayCommand<object> ClearErrorsCommand { get; }
 
     public RelayCommand<string> OpenFolderCommand { get; }
+
+    public RelayCommand<Window> AboutCommand { get; }
 
     public string Exceptions => _exceptionsBuilder.ToString();
 
@@ -139,19 +139,16 @@ internal class MainWindowViewModel : ViewModelBase
         await _reader.ReadAsync(FilePath).ConfigureAwait(false);
     }
 
-    private void OpenRepository(object _)
-    {
-        var startInfo = new ProcessStartInfo(RepositoryUrl)
-        {
-            UseShellExecute = true,
-        };
-        Process.Start(startInfo);
-    }
-
     // ReSharper disable once MemberCanBeMadeStatic.Local
     private void CloseWindow(Window window)
     {
         window.Close();
+    }
+
+    private void OpenAbout(Window window)
+    {
+        var aboutWindow = new AboutWindow {Owner = window};
+        aboutWindow.ShowDialog();
     }
 
     private void CloseEventHandling(object _)

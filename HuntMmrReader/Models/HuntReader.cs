@@ -206,10 +206,7 @@ internal class HuntReader : ObservableObject, IDisposable
         return teams;
     }
 
-    // ReSharper disable once MemberCanBeMadeStatic.Local
-#pragma warning disable CA1822 // Mark members as static
     private XAttribute? GetAttributeByName(XContainer doc, string elementName)
-#pragma warning restore CA1822 // Mark members as static
     {
         return (from entry in doc.Descendants("Attr")
             where entry.Attribute("name")?.Value == elementName
