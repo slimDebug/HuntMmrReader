@@ -32,8 +32,8 @@ r most recent match (_luckily for us this information is saved locally_).
 
 If an error occurs and you would like to report it, please oben a GitHub issue or on the [steam guide](https://steamcommunity.com/sharedfiles/filedetails/?id=2806779825) page.\
 Errors can be seen in the marked box here:\
-
-\It's important that you also provide a Stack trace with the error you're reporting. You can obtain a Stack trace by right clicking the error and pressing the _Copy Stack trace to clipboard_ option.
+![grafik](https://user-images.githubusercontent.com/66317138/169061726-cc95afd3-db82-4931-8a2d-347f9fbffdca.png)
+It's important that you also provide a Stack trace with the error you're reporting. You can obtain a Stack trace by right clicking the error and pressing the _Copy Stack trace to clipboard_ option.
 
 ## Downloading
 
