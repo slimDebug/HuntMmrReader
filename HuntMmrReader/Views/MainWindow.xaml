@@ -93,7 +93,7 @@
         </DataGrid>
         <Button Command="{Binding ClearErrorsCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                 Grid.Row="2" Grid.Column="1">
-            Clear Errors
+            <emoji:TextBlock Margin="5" Text="Clear Errors 🗑" />
         </Button>
         <DataGrid ItemsSource="{Binding Source={StaticResource GroupedTeams}}" AutoGenerateColumns="False"
                   CanUserAddRows="False" CanUserDeleteRows="False" Grid.Row="3" Grid.Column="0"
