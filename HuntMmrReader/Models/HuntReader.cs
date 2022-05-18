@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Xml.Linq;
 using HuntMmrReader.DesignHelper;
 
@@ -15,26 +15,26 @@ internal class HuntReader : ObservableObject, IDisposable
 {
     internal const ushort MaxPlayers = 12;
     internal const ushort MaxTeams = MaxPlayers;
-
-    private readonly TimeSpan _readTimeout;
-
-    private readonly BlockingCollection<(DateTime modifiedDateTime, bool alreadyTried)> _readXmlQueue =
-        new(new ConcurrentQueue<(DateTime modifieDateTime, bool alreadyTried)>());
+    private readonly TimeSpan _readDelay;
+    private readonly Timer _readTimer;
 
     private readonly object _syncLastReadTimeObject = new();
     private readonly object _syncPathObject = new();
     private readonly ConcurrentBag<HuntTeam> _teams = new();
+    private DateTime _lastModificationTime;
     private DateTime _lastReadTime;
+    private bool _readSinceLastModification;
     private FileSystemWatcher? _watcher;
 
-    internal HuntReader(TimeSpan readTimeout)
+    internal HuntReader(TimeSpan readDelay)
     {
+        _readSinceLastModification = false;
+        _readDelay = readDelay;
         _lastReadTime = DateTime.Now;
-        _readTimeout = readTimeout;
-        new Thread(ProcessFileChanges)
-        {
-            IsBackground = true
-        }.Start();
+        _lastModificationTime = _lastReadTime;
+        _readTimer = new Timer {AutoReset = true, Interval = readDelay.TotalMilliseconds};
+        _readTimer.Elapsed += ReadTimerElapsed;
+        _readTimer.Start();
     }
 
     internal string? FilePath { get; private set; }
@@ -57,33 +57,27 @@ internal class HuntReader : ObservableObject, IDisposable
 
     public void Dispose()
     {
-        _readXmlQueue.Dispose();
+        _readTimer.Dispose();
         _watcher?.Dispose();
     }
 
-
-    private void ProcessFileChanges()
+    private void ReadTimerElapsed(object? sender, ElapsedEventArgs e)
     {
-        while (true)
+        if (string.IsNullOrEmpty(FilePath) || _lastModificationTime.Add(_readDelay) >= DateTime.Now ||
+            _readSinceLastModification)
+            return;
+        try
         {
-            var (modifiedDateTime, alreadyTried) = _readXmlQueue.Take();
-            if (string.IsNullOrEmpty(FilePath))
-                return;
-            try
-            {
-                Thread.Sleep(_readTimeout);
-                Read(FilePath);
-                LastReadTime = modifiedDateTime;
-            }
-            catch (Exception e)
-            {
-                if (!alreadyTried)
-                    _readXmlQueue.Add((DateTime.Now, true));
-                else
-                    OnExceptionRaised(e);
-            }
+            Read(FilePath);
+            LastReadTime = DateTime.Now;
+            _readSinceLastModification = true;
+        }
+        catch (Exception ex)
+        {
+            OnExceptionRaised(ex);
         }
     }
+
 
     private IEnumerable<HuntTeam> GetPlayersFromDoc(XContainer doc)
     {
@@ -219,6 +213,13 @@ internal class HuntReader : ObservableObject, IDisposable
         foreach (var player in players) _teams.Add(player);
         OnPropertyChanged(nameof(Teams));
         LastReadTime = DateTime.Now;
+        PrepareFileWatcher(path);
+
+        SetPath(path);
+    }
+
+    internal void PrepareFileWatcher(string path)
+    {
         var parentDirectory = Directory.GetParent(path);
         var filename = Path.GetFileName(path);
         if (parentDirectory == default || string.IsNullOrEmpty(filename))
@@ -234,8 +235,6 @@ internal class HuntReader : ObservableObject, IDisposable
         {
             _watcher.Path = parentDirectory.FullName;
         }
-
-        SetPath(path);
     }
 
     internal void Read(string path)
@@ -285,7 +284,8 @@ internal class HuntReader : ObservableObject, IDisposable
 
     private void Watcher_Changed(object sender, FileSystemEventArgs e)
     {
-        _readXmlQueue.Add((DateTime.Now, false));
+        _lastModificationTime = DateTime.Now;
+        _readSinceLastModification = false;
     }
 
     internal event EventHandler<Exception>? ExceptionRaised;

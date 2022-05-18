@@ -37,7 +37,7 @@ internal class MainWindowViewModel : ViewModelBase
         OpenFolderCommand = new RelayCommand<string>(OpenFolder, CheckIfFileExists);
         ClipboardCopyCommand = new RelayCommand<string>(CopyToClipboard);
         AboutCommand = new RelayCommand<Window>(OpenAbout);
-        _reader = new HuntReader(TimeSpan.FromSeconds(3));
+        _reader = new HuntReader(TimeSpan.FromSeconds(20));
         _reader.PropertyChanged += Reader_PropertyChanged;
         _reader.ExceptionRaised += Reader_ExceptionRaised;
         _filePath = "";
@@ -45,6 +45,8 @@ internal class MainWindowViewModel : ViewModelBase
         try
         {
             FilePath = Settings.Default.LastPath;
+            if (CheckIfFileExists(FilePath))
+                _reader.PrepareFileWatcher(FilePath);
         }
         catch (SettingsPropertyNotFoundException)
         {

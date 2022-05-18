@@ -86,14 +86,13 @@
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="_Copy Stack trace to clipboard" Command="{Binding ClipboardCopyCommand}"
-                              CommandParameter="{Binding SelectedDisplayException.StackTrace}">
-                    </MenuItem>
+                              CommandParameter="{Binding SelectedDisplayException.StackTrace}" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
         <Button Command="{Binding ClearErrorsCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                 Grid.Row="2" Grid.Column="1">
-            Clear Errors
+            <emoji:TextBlock Margin="5" Text="Clear Errors 🗑" />
         </Button>
         <DataGrid ItemsSource="{Binding Source={StaticResource GroupedTeams}}" AutoGenerateColumns="False"
                   CanUserAddRows="False" CanUserDeleteRows="False" Grid.Row="3" Grid.Column="0"
