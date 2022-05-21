@@ -10,6 +10,7 @@
         xmlns:viewModels="clr-namespace:HuntMmrReader.ViewModels"
         xmlns:converters="clr-namespace:HuntMmrReader.Converters"
         xmlns:models="clr-namespace:HuntMmrReader.Models"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
         Height="500" Width="1000"
         Title="{Binding Title, Mode=OneWay}">
@@ -20,6 +21,9 @@
         <converters:BooleanToEmoticonConverter x:Key="BooleanToEmoticonConverter" />
         <converters:IsEqualOrGreaterThanUshortVisibilityConverter x:Key="IsEqualOrGreaterThanUshortVisibilityConverter" />
         <converters:IntToCowboyConverter x:Key="IntToCowboyConverter" />
+        <converters:MmrToColorConverter x:Key="MmrToColorConverter" />
+        <converters:MmrToMmrRangeString x:Key="MmrToMmrRangeString" />
+        <converters:MmrToPrognosisStringConverter x:Key="MmrToPrognosisStringConverter" />
         <CollectionViewSource x:Key="GroupedTeams" Source="{Binding Teams}">
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription PropertyName="Id" />
@@ -149,6 +153,14 @@
                                 <behaviors:Interaction.Behaviors>
                                     <viewAddons:BubbleScrollEvent />
                                 </behaviors:Interaction.Behaviors>
+                                <DataGrid.Resources>
+                                    <system:UInt16 x:Key="OneStarMinimumMmr">0</system:UInt16>
+                                    <system:UInt16 x:Key="TwoStarMinimumMmr">2000</system:UInt16>
+                                    <system:UInt16 x:Key="ThreeStarMinimumMmr">2300</system:UInt16>
+                                    <system:UInt16 x:Key="FourStarMinimumMmr">2600</system:UInt16>
+                                    <system:UInt16 x:Key="FiveStarMinimumMmr">2750</system:UInt16>
+                                    <system:UInt16 x:Key="SixStarMinimumMmr">3000</system:UInt16>
+                                </DataGrid.Resources>
                                 <DataGrid.ColumnHeaderStyle>
                                     <Style TargetType="{x:Type DataGridColumnHeader}">
                                         <Setter Property="FontWeight" Value="Bold" />
@@ -162,23 +174,43 @@
                                 </DataGrid.CellStyle>
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
-                                    <DataGridTextColumn Header="MMR" Binding="{Binding Mmr}" Width="Auto" />
+                                    <DataGridTemplateColumn Header="MMR" Width="Auto">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate DataType="models:HuntPlayer">
+                                                <TextBlock Text="{Binding Mmr}"
+                                                           Foreground="{Binding Mmr, Converter={StaticResource MmrToColorConverter}}"
+                                                           HorizontalAlignment="Center">
+                                                    <TextBlock.ToolTip>
+                                                        <StackPanel>
+                                                            <TextBlock
+                                                                Text="{Binding Mmr, Converter={StaticResource MmrToMmrRangeString}}"
+                                                                Margin="5" FontWeight="Bold" />
+                                                            <TextBlock
+                                                                Text="{Binding Mmr, Converter={StaticResource MmrToPrognosisStringConverter}}"
+                                                                Margin="5"
+                                                                Foreground="{Binding Mmr, Converter={StaticResource MmrToColorConverter}}" />
+                                                        </StackPanel>
+                                                    </TextBlock.ToolTip>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
                                     <DataGridTemplateColumn Header="Stars" Width="Auto">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate DataType="models:HuntPlayer">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Image Source="{StaticResource StarDrawingImage}"
-                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter=0}" />
+                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter={StaticResource OneStarMinimumMmr}}" />
                                                     <Image Source="{StaticResource StarDrawingImage}"
-                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter=2000}" />
+                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter={StaticResource TwoStarMinimumMmr}}" />
                                                     <Image Source="{StaticResource StarDrawingImage}"
-                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter=2300}" />
+                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter={StaticResource ThreeStarMinimumMmr}}" />
                                                     <Image Source="{StaticResource StarDrawingImage}"
-                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter=2600}" />
+                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter={StaticResource FourStarMinimumMmr}}" />
                                                     <Image Source="{StaticResource StarDrawingImage}"
-                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter=2750}" />
+                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter={StaticResource FiveStarMinimumMmr}}" />
                                                     <Image Source="{StaticResource StarDrawingImage}"
-                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter=3000}" />
+                                                           Visibility="{Binding Mmr, Converter={StaticResource IsEqualOrGreaterThanUshortVisibilityConverter}, ConverterParameter={StaticResource SixStarMinimumMmr}}" />
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>

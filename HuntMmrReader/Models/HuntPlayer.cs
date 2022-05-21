@@ -3,23 +3,23 @@ using HuntMmrReader.Models.BaseModels;
 
 namespace HuntMmrReader.Models;
 
-internal class HuntPlayer : HuntBaseEntity
+public class HuntPlayer : HuntBaseEntity
 {
-    internal HuntPlayer(string? name, ushort mmr, bool hadBounty, bool hadWellSpring,
+    public HuntPlayer(string? name, ushort mmr, bool hadBounty, bool hadWellSpring,
         ushort killedByMe, ushort killedMe,
         ushort playerId) : base(mmr, playerId)
     {
-        Name = name;
+        Name = name ?? string.Empty;
         HadBounty = hadBounty;
         HadWellSpring = hadWellSpring;
         KilledByMe = killedByMe;
         KilledMe = killedMe;
     }
 
-    internal HuntPlayer(string? name, string? mmr, string? hadBounty,
+    public HuntPlayer(string? name, string? mmr, string? hadBounty,
         string? hadWellSpring, string? killedByMe, string? killedMe, ushort playerId) : base(mmr, playerId)
     {
-        Name = name;
+        Name = name ?? string.Empty;
         HadBounty = bool.TryParse(hadBounty, out var parsedHadBounty) && parsedHadBounty;
         HadWellSpring = bool.TryParse(hadWellSpring, out var parsedHadWellSpring) && parsedHadWellSpring;
         KilledByMe =
@@ -31,7 +31,7 @@ internal class HuntPlayer : HuntBaseEntity
             : ushort.MinValue;
     }
 
-    public string? Name { get; }
+    public string Name { get; }
 
     public bool HadBounty { get; }
     public bool HadWellSpring { get; }
@@ -40,7 +40,6 @@ internal class HuntPlayer : HuntBaseEntity
 
     public override string ToString()
     {
-        return
-            $"Player Name: {Name ?? "",-24} | MMR: {Mmr.ToString(CultureInfo.InvariantCulture),4}";
+        return $"Player Name: {Name,-24} | MMR: {Mmr.ToString(CultureInfo.InvariantCulture),4}";
     }
 }
