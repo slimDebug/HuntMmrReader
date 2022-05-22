@@ -20,30 +20,41 @@ This tool let's you read out your exact MMR as a number.
 1. Download the [newest release version](https://github.com/slimDebug/HuntMmrReader/releases/latest) of the unt MMR Reader. Refer to [Downloading](#Downloading) if you are unsure what version to download.
 2. Extract the zip whereever you like. I recommend using [7-zip](https://www.7-zip.org/), but other utilities should work without problems as well.
 3. Open the **_HuntMmrReader.exe_** file.
-4. Click _Settings_ in the menu tab and click _Edit Path..._.![grafik](https://user-images.githubusercontent.com/66317138/169058102-f069f162-1813-4978-b266-dab1a82ea01c.png)
+4. Click _Settings_ in the menu tab and click _Edit Path..._.![grafik](https://user-images.githubusercontent.com/66317138/169690424-571be666-da87-48a6-8728-c5945c93ccba.png)
 
 5. Select the _attributes.xml_ file from your **Hunt: Showdown** installation folder. The file should be located in **_SteamLibrary\steamapps\common\Hunt Showdown\user\profiles\default\attributes.xml_**
 6. Hit the open button.
-7. You should see something like this:![example_screenshot](https://user-images.githubusercontent.com/66317138/169058676-93fed089-2124-45ba-8d7f-d0b265660542.PNG)
-8. Congratulations. You can see the MMR of all teams/players of you
-r most recent match (_luckily for us this information is saved locally_).
+7. You should see something like this:![grafik](https://user-images.githubusercontent.com/66317138/169690447-0d7875ec-362f-4c99-a2df-5bc8c7406d83.png)
+8. Congratulations. You can see the MMR of all teams/players of your most recent match (_luckily for us this information is saved locally_).
 
-## Reporting errors
+## MMR Prognosis
 
-If an error occurs and you would like to report it, please open a new [GitHub issue](https://github.com/slimDebug/HuntMmrReader/issues/new/choose) or on the [steam guide](https://steamcommunity.com/sharedfiles/filedetails/?id=2806779825) page.\
-Errors can be seen in the marked box here:\
-![grafik](https://user-images.githubusercontent.com/66317138/169061726-cc95afd3-db82-4931-8a2d-347f9fbffdca.png)
-It's important that you also provide a Stack trace with the error you're reporting. You can obtain a Stack trace by right clicking the error and pressing the _Copy Stack trace to clipboard_ option.
+This program includes a feature called **MMR Prognosis**. You might notice that the MMR values are colored. The meaning of this colors are as followed:
+| Color  | Meaning                               |
+|--------|---------------------------------------|
+| Green  | Closer to a uprank                    |
+| Orange | Equally far away from a uprank/derank |
+| Red    | Closer to a derank                    |
 
-## Downloading
-
-Hunt MMR Reader is available in two variants, but you're interested in the package that matches your architecture. If you're using `64`-bit `Win`dows, then you want `win-x64` package. If you're using `32-bit Windows`, then you want `win-x86` package. The packages can be found [here](https://github.com/slimDebug/HuntMmrReader/releases/latest).
+If you hover over the MMR value, you'll see a text like this:![grafik](https://user-images.githubusercontent.com/66317138/169690334-01dace3c-cfda-468c-9ba4-5dad2ed6fd20.png)
+It tells you the MMR ranges for the current rank and how much MMR points are missing for a uprank/derank (whatever is closer).
 
 ## To be noted
 
 - The program automatically detects if the file was modified and reads it on changes.
 - Hitting **F5** forces the program to read the file.
 
+## Reporting errors
+
+If an error occurs and you would like to report it, please open a new [GitHub issue](https://github.com/slimDebug/HuntMmrReader/issues/new/choose) or on the [steam guide](https://steamcommunity.com/sharedfiles/filedetails/?id=2806779825) page.\
+Errors can be seen in the marked box here:\
+![grafik](https://user-images.githubusercontent.com/66317138/169690488-0bf63869-52cf-4b5e-8170-54ae1847a787.png)
+It's important that you also provide a Stack trace with the error you're reporting. You can obtain a Stack trace by right clicking the error and pressing the _Copy Stack trace to clipboard_ option.
+
 ## Can I get VAC ban or game ban for using this?
 
 This program just reads a file. You can achieve the same with any text editor. I would say it's very unlikely to get banned for this, but at the end it is up to the **Hunt: Showdown developers** to decide who should get banned. **I'm not liable for any damage caused by this software and I'm not guaranteeing anything. In the end it is up to you and it's your risk to use this software.**
+
+## Downloading
+
+Hunt MMR Reader is available in two variants, but you're interested in the package that matches your architecture. If you're using `64`-bit `Win`dows, then you want `win-x64` package. If you're using `32-bit Windows`, then you want `win-x86` package. The packages can be found [here](https://github.com/slimDebug/HuntMmrReader/releases/latest).

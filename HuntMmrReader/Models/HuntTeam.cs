@@ -5,11 +5,11 @@ using HuntMmrReader.Models.BaseModels;
 
 namespace HuntMmrReader.Models;
 
-internal class HuntTeam : HuntBaseEntity
+public class HuntTeam : HuntBaseEntity
 {
     private readonly List<HuntPlayer> _members;
 
-    internal HuntTeam(ushort mmr, ushort id, bool inviteTeam, bool skillBasedMatchMakingEnabled,
+    public HuntTeam(ushort mmr, ushort id, bool inviteTeam, bool skillBasedMatchMakingEnabled,
         List<HuntPlayer> teamMembers) : base(mmr, id)
     {
         _members = teamMembers;
@@ -17,11 +17,12 @@ internal class HuntTeam : HuntBaseEntity
         SkillBasedMatchMakingEnabled = skillBasedMatchMakingEnabled;
     }
 
-    internal HuntTeam(string? mmr, ushort id, string? inviteTeam, string? skillBasedMatchMakingEnabled,
+    public HuntTeam(string? mmr, ushort id, string? inviteTeam, string? skillBasedMatchMakingEnabled,
         List<HuntPlayer> teamMembers) : base(mmr, id)
     {
         _members = teamMembers;
-        RandomTeam = !(bool.TryParse(inviteTeam, out var parsedInviteTeam) && parsedInviteTeam) && teamMembers.Count != 1;
+        RandomTeam = !(bool.TryParse(inviteTeam, out var parsedInviteTeam) && parsedInviteTeam) &&
+                     teamMembers.Count != 1;
         SkillBasedMatchMakingEnabled =
             bool.TryParse(skillBasedMatchMakingEnabled, out var parsedSkillBasedMatchMakingEnabled) &&
             parsedSkillBasedMatchMakingEnabled;

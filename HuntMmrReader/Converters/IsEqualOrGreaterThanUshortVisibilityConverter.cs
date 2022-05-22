@@ -9,8 +9,7 @@ internal class IsEqualOrGreaterThanUshortVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is ushort ushortValue && parameter is string stringParameter &&
-            ushort.TryParse(stringParameter, NumberStyles.Integer, CultureInfo.InvariantCulture, out var ushortParameter))
+        if (value is ushort ushortValue && parameter is ushort ushortParameter)
             return ushortValue >= ushortParameter ? Visibility.Visible : Visibility.Hidden;
 
         return Visibility.Hidden;
