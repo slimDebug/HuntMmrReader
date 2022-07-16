@@ -137,6 +137,7 @@ internal class HuntReader : ObservableObject, IDisposable
             var players = new List<HuntPlayer>();
             XAttribute? teamMmrElement;
             XAttribute? inviteTeamElement;
+            XAttribute? ownTeamElement;
             XAttribute? skillBasedMatchMakingEnabledElement = default;
             try
             {
@@ -144,6 +145,7 @@ internal class HuntReader : ObservableObject, IDisposable
                 teamMmrElement = GetAttributeByName(doc,
                     $"{baseTempTeamString}mmr");
                 inviteTeamElement = GetAttributeByName(doc, $"{baseTempTeamString}isinvite");
+                ownTeamElement = GetAttributeByName(doc, $"{baseTempTeamString}ownteam");
             }
             catch (Exception e)
             {
@@ -159,8 +161,8 @@ internal class HuntReader : ObservableObject, IDisposable
                 var tempPlayerMmr = $"{baseTempPlayerString}mmr";
                 var tempPlayerHadBounty = $"{baseTempPlayerString}hadbounty";
                 var tempPlayerHadWellSpring = $"{baseTempPlayerString}hadWellspring";
-                var tempPlayerKilledByMe = $"{baseTempPlayerString}killedbyme";
-                var tempPlayerKilledMe = $"{baseTempPlayerString}killedme";
+                var tempPlayerKilledByMe = $"{baseTempPlayerString}downedbyme";
+                var tempPlayerKilledMe = $"{baseTempPlayerString}downedme";
                 var tempPlayerSkillBasedMatchMakingEnabled = $"{baseTempPlayerString}skillbased";
                 XAttribute? nameElement;
                 XAttribute? mmrElement;
@@ -193,6 +195,7 @@ internal class HuntReader : ObservableObject, IDisposable
             }
 
             teams.Add(new HuntTeam(teamMmrElement?.Value, (ushort) (teamCounter + 1), inviteTeamElement?.Value,
+                ownTeamElement?.Value,
                 skillBasedMatchMakingEnabledElement?.Value, players));
             teamCounter++;
         }
