@@ -32,7 +32,6 @@ public class HuntPlayer : HuntBaseEntity
     }
 
     public string Name { get; }
-
     public bool HadBounty { get; }
     public bool HadWellSpring { get; }
     public ushort KilledByMe { get; }

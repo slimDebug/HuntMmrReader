@@ -10,26 +10,29 @@ public class HuntTeam : HuntBaseEntity
     private readonly List<HuntPlayer> _members;
 
     public HuntTeam(ushort mmr, ushort id, bool inviteTeam, bool skillBasedMatchMakingEnabled,
-        List<HuntPlayer> teamMembers) : base(mmr, id)
+        List<HuntPlayer> teamMembers, bool ownTeam) : base(mmr, id)
     {
         _members = teamMembers;
         RandomTeam = teamMembers.Count != 1 && !inviteTeam;
+        OwnTeam = ownTeam;
         SkillBasedMatchMakingEnabled = skillBasedMatchMakingEnabled;
     }
 
-    public HuntTeam(string? mmr, ushort id, string? inviteTeam, string? skillBasedMatchMakingEnabled,
+    public HuntTeam(string? mmr, ushort id, string? inviteTeam, string? ownTeam, string? skillBasedMatchMakingEnabled,
         List<HuntPlayer> teamMembers) : base(mmr, id)
     {
         _members = teamMembers;
         RandomTeam = !(bool.TryParse(inviteTeam, out var parsedInviteTeam) && parsedInviteTeam) &&
                      teamMembers.Count != 1;
+        OwnTeam = bool.TryParse(ownTeam, out var parsedOwnTeam) &&
+                  parsedOwnTeam;
         SkillBasedMatchMakingEnabled =
             bool.TryParse(skillBasedMatchMakingEnabled, out var parsedSkillBasedMatchMakingEnabled) &&
             parsedSkillBasedMatchMakingEnabled;
     }
 
+    public bool OwnTeam { get; }
     public bool SkillBasedMatchMakingEnabled { get; }
-
     public bool RandomTeam { get; }
 
     public IReadOnlyCollection<HuntPlayer> Members =>
