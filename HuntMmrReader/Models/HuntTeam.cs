@@ -18,17 +18,13 @@ public class HuntTeam : HuntBaseEntity
         SkillBasedMatchMakingEnabled = skillBasedMatchMakingEnabled;
     }
 
-    public HuntTeam(string? mmr, ushort id, string? inviteTeam, string? ownTeam, string? skillBasedMatchMakingEnabled,
-        List<HuntPlayer> teamMembers) : base(mmr, id)
+    public HuntTeam(string? mmr, ushort id, string? inviteTeam, string? ownTeam, List<HuntPlayer> teamMembers) :
+        base(mmr, id)
     {
         _members = teamMembers;
-        RandomTeam = !(bool.TryParse(inviteTeam, out var parsedInviteTeam) && parsedInviteTeam) &&
-                     teamMembers.Count != 1;
-        OwnTeam = bool.TryParse(ownTeam, out var parsedOwnTeam) &&
-                  parsedOwnTeam;
-        SkillBasedMatchMakingEnabled =
-            bool.TryParse(skillBasedMatchMakingEnabled, out var parsedSkillBasedMatchMakingEnabled) &&
-            parsedSkillBasedMatchMakingEnabled;
+        RandomTeam = !ParseBoolean(inviteTeam) && teamMembers.Count != 1;
+        OwnTeam = ParseBoolean(ownTeam);
+        SkillBasedMatchMakingEnabled = _members.All(member => member.SkillBased);
     }
 
     public bool OwnTeam { get; }
