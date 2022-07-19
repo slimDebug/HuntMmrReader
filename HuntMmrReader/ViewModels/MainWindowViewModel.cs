@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using HuntMmrReader.DesignHelper;
+using HuntMmrReader.Enums;
 using HuntMmrReader.Models;
 using HuntMmrReader.Properties;
 using HuntMmrReader.Views;
@@ -19,6 +19,8 @@ internal class MainWindowViewModel : ViewModelBase
     internal const string BaseTitle = "Hunt MMR Reader";
 
     private readonly HuntReader _reader;
+
+    private PlayerOptions _displayOptions;
     private string _filePath;
     private DateTime _lastRefreshTime;
     private DisplayException _selectedDisplayException;
@@ -36,25 +38,22 @@ internal class MainWindowViewModel : ViewModelBase
         ClearErrorsCommand = new RelayCommand<object>(ClearExceptions, _ => Exceptions.Any());
         OpenFolderCommand = new RelayCommand<string>(OpenFolder, CheckIfFileExists);
         ClipboardCopyCommand = new RelayCommand<string>(CopyToClipboard);
+        SetUnsetDisplayOptionsCommand = new RelayCommand<PlayerOptions>(HandleOption);
         AboutCommand = new RelayCommand<Window>(OpenAbout);
         _reader = new HuntReader(TimeSpan.FromSeconds(20));
         _reader.PropertyChanged += Reader_PropertyChanged;
         _reader.ExceptionRaised += Reader_ExceptionRaised;
-        _filePath = "";
+        _filePath = string.Empty;
         _selectedDisplayException = new DisplayException(typeof(DisplayException), "default Exception", default);
-        try
-        {
-            FilePath = Settings.Default.LastPath;
-            if (CheckIfFileExists(FilePath))
-                _reader.PrepareFileWatcher(FilePath);
-        }
-        catch (SettingsPropertyNotFoundException)
-        {
-            FilePath = "";
-        }
-
+        LoadSettings();
         if (!string.IsNullOrEmpty(FilePath))
             _reader.Read(FilePath);
+    }
+
+    public PlayerOptions DisplayOptions
+    {
+        get => _displayOptions;
+        private set => SetProperty(ref _displayOptions, value);
     }
 
     public DisplayException SelectedDisplayException
@@ -111,7 +110,34 @@ internal class MainWindowViewModel : ViewModelBase
 
     public RelayCommand<string> ClipboardCopyCommand { get; }
 
+    public RelayCommand<PlayerOptions> SetUnsetDisplayOptionsCommand { get; }
+
     public RelayCommand<Window> AboutCommand { get; }
+
+    private void LoadSettings()
+    {
+        try
+        {
+            var options = (PlayerOptions) Settings.Default.DisplayOptions;
+            _displayOptions = (PlayerOptions.All & options) == options ? options : PlayerOptions.None;
+            FilePath = Settings.Default.LastPath;
+            if (CheckIfFileExists(FilePath))
+                _reader.PrepareFileWatcher(FilePath);
+        }
+        catch
+        {
+            FilePath = "";
+            _displayOptions = PlayerOptions.None;
+        }
+    }
+
+    private void HandleOption(PlayerOptions option)
+    {
+        if (DisplayOptions.HasFlag(option))
+            DisplayOptions &= ~option;
+        else
+            DisplayOptions |= option;
+    }
 
     private void Reader_ExceptionRaised(object? sender, Exception e)
     {
@@ -164,6 +190,7 @@ internal class MainWindowViewModel : ViewModelBase
     private void CloseEventHandling(object _)
     {
         Settings.Default.LastPath = _filePath;
+        Settings.Default.DisplayOptions = (int) DisplayOptions;
         Settings.Default.Save();
     }
 

@@ -39,6 +39,12 @@ This program includes a feature called **MMR Prognosis**. You might notice that 
 If you hover over the MMR value, you'll see a text like this:![grafik](https://user-images.githubusercontent.com/66317138/169690334-01dace3c-cfda-468c-9ba4-5dad2ed6fd20.png)
 It tells you the MMR ranges for the current rank and how much MMR points are missing for a uprank/derank (whatever is closer).
 
+## Toggleable Columns
+
+This program lets you toggle columns as you wish. You are able to toggle every column in the _Settings_ menu tab. It should look like something like that:
+![toggleable-columns-image](https://user-images.githubusercontent.com/66317138/179780008-3a1d8256-661a-442a-827e-04013681bc38.png)
+Just select what columns you want to hide/show.
+
 ## To be noted
 
 - The program automatically detects if the file was modified and reads it on changes.
@@ -49,7 +55,6 @@ It tells you the MMR ranges for the current rank and how much MMR points are mis
 If an error occurs and you would like to report it, please open a new [GitHub issue](https://github.com/slimDebug/HuntMmrReader/issues/new/choose) or on the [steam guide](https://steamcommunity.com/sharedfiles/filedetails/?id=2806779825) page.\
 Errors can be seen in the marked box here:\
 ![grafik](https://user-images.githubusercontent.com/66317138/169690488-0bf63869-52cf-4b5e-8170-54ae1847a787.png)
-It's important that you also provide a Stack trace with the error you're reporting. You can obtain a Stack trace by right clicking the error and pressing the _Copy Stack trace to clipboard_ option.
 
 ## Can I get VAC ban or game ban for using this?
 

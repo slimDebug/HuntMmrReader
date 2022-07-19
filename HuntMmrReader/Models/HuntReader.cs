@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Xml.Linq;
 using HuntMmrReader.DesignHelper;
+using HuntMmrReader.Enums;
+using HuntMmrReader.Extensions;
 
 namespace HuntMmrReader.Models;
 
@@ -138,7 +140,6 @@ internal class HuntReader : ObservableObject, IDisposable
             XAttribute? teamMmrElement;
             XAttribute? inviteTeamElement;
             XAttribute? ownTeamElement;
-            XAttribute? skillBasedMatchMakingEnabledElement = default;
             try
             {
                 var baseTempTeamString = $"MissionBagTeam_{teamCounter.ToString(CultureInfo.InvariantCulture)}_";
@@ -157,29 +158,73 @@ internal class HuntReader : ObservableObject, IDisposable
             {
                 var baseTempPlayerString =
                     $"MissionBagPlayer_{teamCounter.ToString(CultureInfo.InvariantCulture)}_{i.ToString(CultureInfo.InvariantCulture)}_";
-                var tempPlayerName = $"{baseTempPlayerString}blood_line_name";
-                var tempPlayerMmr = $"{baseTempPlayerString}mmr";
-                var tempPlayerHadBounty = $"{baseTempPlayerString}hadbounty";
-                var tempPlayerHadWellSpring = $"{baseTempPlayerString}hadWellspring";
-                var tempPlayerKilledByMe = $"{baseTempPlayerString}downedbyme";
-                var tempPlayerKilledMe = $"{baseTempPlayerString}downedme";
-                var tempPlayerSkillBasedMatchMakingEnabled = $"{baseTempPlayerString}skillbased";
-                XAttribute? nameElement;
-                XAttribute? mmrElement;
+                XAttribute? bloodLineNameElement;
+                XAttribute? bountyExtractedElement;
+                XAttribute? bountyPickedUpElement;
+                XAttribute? downedByMeElement;
+                XAttribute? downedByTeammateElement;
+                XAttribute? downedMeElement;
+                XAttribute? downedTeammateElement;
+                XAttribute? hadWellspringElement;
                 XAttribute? hadBountyElement;
-                XAttribute? hadWellSpringElement;
+                XAttribute? isPartnerElement;
+                XAttribute? isSoulSurvivorElement;
                 XAttribute? killedByMeElement;
+                XAttribute? killedByTeammateElement;
                 XAttribute? killedMeElement;
+                XAttribute? killedTeammateElement;
+                XAttribute? mmrElement;
+                XAttribute? profileIdElement;
+                XAttribute? proximityElement;
+                XAttribute? proximityToMeElement;
+                XAttribute? proximityToTeammateElement;
+                XAttribute? skillBasedElement;
+                XAttribute? teamExtractionElement;
                 try
                 {
-                    nameElement = GetAttributeByName(doc, tempPlayerName);
-                    mmrElement = GetAttributeByName(doc, tempPlayerMmr);
-                    hadBountyElement = GetAttributeByName(doc, tempPlayerHadBounty);
-                    hadWellSpringElement = GetAttributeByName(doc, tempPlayerHadWellSpring);
-                    killedByMeElement = GetAttributeByName(doc, tempPlayerKilledByMe);
-                    killedMeElement = GetAttributeByName(doc, tempPlayerKilledMe);
-                    skillBasedMatchMakingEnabledElement =
-                        GetAttributeByName(doc, tempPlayerSkillBasedMatchMakingEnabled);
+                    bloodLineNameElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.BloodLineName.GetDescription()}");
+                    bountyExtractedElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.BountyExtracted.GetDescription()}");
+                    bountyPickedUpElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.BountyPickedUp.GetDescription()}");
+                    downedByMeElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.DownedByMe.GetDescription()}");
+                    downedByTeammateElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.DownedByTeammate.GetDescription()}");
+                    downedMeElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.DownedMe.GetDescription()}");
+                    downedTeammateElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.DownedTeammate.GetDescription()}");
+                    hadWellspringElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.HadWellspring.GetDescription()}");
+                    hadBountyElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.HadBounty.GetDescription()}");
+                    isPartnerElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.IsPartner.GetDescription()}");
+                    isSoulSurvivorElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.IsSoulSurvivor.GetDescription()}");
+                    killedByMeElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.KilledByMe.GetDescription()}");
+                    killedByTeammateElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.KilledByTeammate.GetDescription()}");
+                    killedMeElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.KilledMe.GetDescription()}");
+                    killedTeammateElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.KilledTeammate.GetDescription()}");
+                    mmrElement = GetAttributeByName(doc, $"{baseTempPlayerString}{PlayerOptions.Mmr.GetDescription()}");
+                    profileIdElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.ProfileId.GetDescription()}");
+                    proximityElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.Proximity.GetDescription()}");
+                    proximityToMeElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.ProximityToMe.GetDescription()}");
+                    proximityToTeammateElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.ProximityToTeammate.GetDescription()}");
+                    skillBasedElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.SkillBased.GetDescription()}");
+                    teamExtractionElement = GetAttributeByName(doc,
+                        $"{baseTempPlayerString}{PlayerOptions.TeamExtraction.GetDescription()}");
                 }
                 catch (Exception e)
                 {
@@ -187,16 +232,17 @@ internal class HuntReader : ObservableObject, IDisposable
                     return teams;
                 }
 
-                if (nameElement != default && mmrElement != default && hadBountyElement != default &&
-                    hadWellSpringElement != default && killedByMeElement != default && killedMeElement != default)
-                    players.Add(new HuntPlayer(nameElement.Value, mmrElement.Value, hadBountyElement.Value,
-                        hadWellSpringElement.Value,
-                        killedByMeElement.Value, killedMeElement.Value, (ushort) (i + 1)));
+                players.Add(new HuntPlayer((ushort) (i + 1), mmrElement?.Value, bloodLineNameElement?.Value,
+                    bountyExtractedElement?.Value, bountyPickedUpElement?.Value, downedByMeElement?.Value,
+                    downedByTeammateElement?.Value, downedMeElement?.Value, downedTeammateElement?.Value,
+                    hadWellspringElement?.Value, hadBountyElement?.Value, isPartnerElement?.Value,
+                    isSoulSurvivorElement?.Value, killedByMeElement?.Value, killedByTeammateElement?.Value, killedMeElement?.Value,
+                    killedTeammateElement?.Value, profileIdElement?.Value, proximityElement?.Value, proximityToMeElement?.Value,
+                    proximityToTeammateElement?.Value, skillBasedElement?.Value, teamExtractionElement?.Value));
             }
 
             teams.Add(new HuntTeam(teamMmrElement?.Value, (ushort) (teamCounter + 1), inviteTeamElement?.Value,
-                ownTeamElement?.Value,
-                skillBasedMatchMakingEnabledElement?.Value, players));
+                ownTeamElement?.Value, players));
             teamCounter++;
         }
 

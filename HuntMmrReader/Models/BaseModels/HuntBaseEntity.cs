@@ -19,12 +19,29 @@ public abstract class HuntBaseEntity
 
     protected HuntBaseEntity(string? mmr, ushort id)
     {
-        Mmr = ushort.TryParse(mmr, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsedMmr)
-            ? parsedMmr
-            : ushort.MinValue;
+        Mmr = ParseUInt16(mmr);
         Id = id;
     }
 
     public ushort Mmr { get; }
     public ushort Id { get; }
+
+    protected static bool ParseBoolean(string? input)
+    {
+        return bool.TryParse(input, out var parsedInput) && parsedInput;
+    }
+
+    protected static ushort ParseUInt16(string? input)
+    {
+        return ushort.TryParse(input, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsedInput)
+            ? parsedInput
+            : ushort.MinValue;
+    }
+
+    protected static ulong ParseUInt64(string? input)
+    {
+        return ulong.TryParse(input, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsedInput)
+            ? parsedInput
+            : ulong.MinValue;
+    }
 }

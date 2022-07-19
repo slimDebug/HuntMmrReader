@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
+        xmlns:enums="clr-namespace:HuntMmrReader.Enums"
         xmlns:viewAddons="clr-namespace:HuntMmrReader.ViewAddons"
         xmlns:viewModels="clr-namespace:HuntMmrReader.ViewModels"
         xmlns:converters="clr-namespace:HuntMmrReader.Converters"
@@ -24,6 +25,8 @@
         <converters:MmrToColorConverter x:Key="MmrToColorConverter" />
         <converters:MmrToMmrRangeString x:Key="MmrToMmrRangeString" />
         <converters:MmrToPrognosisStringConverter x:Key="MmrToPrognosisStringConverter" />
+        <converters:PlayerOptionsToBooleanConverter x:Key="PlayerOptionsToBooleanConverter" />
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <CollectionViewSource x:Key="GroupedTeams" Source="{Binding Teams}">
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription PropertyName="Id" />
@@ -59,6 +62,93 @@
             </MenuItem>
             <MenuItem Header="_Settings">
                 <MenuItem Header="_Edit Path..." Command="{Binding GetFilePathCommand}" />
+                <Separator />
+                <MenuItem Header="_Name" x:Name="BloodLineNameOption" Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.BloodLineName}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.BloodLineName}, Mode=OneWay}" />
+                <MenuItem Header="_MMR" x:Name="MmrOption" Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.Mmr}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.Mmr}, Mode=OneWay}" />
+                <MenuItem Header="_Bounty Extracted" x:Name="BountyExtractedOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.BountyExtracted}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.BountyExtracted}, Mode=OneWay}" />
+                <MenuItem Header="_Bounty Picked Up" x:Name="BountyPickedUpOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.BountyPickedUp}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.BountyPickedUp}, Mode=OneWay}" />
+                <MenuItem Header="_Had Bounty" x:Name="HadBountyOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.HadBounty}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.HadBounty}, Mode=OneWay}" />
+                <MenuItem Header="_Had Wellspring" x:Name="HadWellspringOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.HadWellspring}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.HadWellspring}, Mode=OneWay}" />
+                <MenuItem Header="_Downed by me X times" x:Name="DownedByMeOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.DownedByMe}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.DownedByMe}, Mode=OneWay}" />
+                <MenuItem Header="_Downed by teammate X times" x:Name="DownedByTeammateOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.DownedByTeammate}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.DownedByTeammate}, Mode=OneWay}" />
+                <MenuItem Header="_Downed me X times" x:Name="DownedMeOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.DownedMe}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.DownedMe}, Mode=OneWay}" />
+                <MenuItem Header="_Downed teammate X times" x:Name="DownedTeammateOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.DownedTeammate}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.DownedTeammate}, Mode=OneWay}" />
+                <MenuItem Header="_Killed by me X times" x:Name="KilledByMeOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.KilledByMe}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.KilledByMe}, Mode=OneWay}" />
+                <MenuItem Header="_Killed by teammate X times" x:Name="KilledByTeammateOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.KilledByTeammate}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.KilledByTeammate}, Mode=OneWay}" />
+                <MenuItem Header="_Killed me X times" x:Name="KilledMeOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.KilledMe}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.KilledMe}, Mode=OneWay}" />
+                <MenuItem Header="_Killed teammate X times" x:Name="KilledTeammateOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.KilledTeammate}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.KilledTeammate}, Mode=OneWay}" />
+                <MenuItem Header="_Is Partner" x:Name="IsPartnerOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.IsPartner}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.IsPartner}, Mode=OneWay}" />
+                <MenuItem Header="_Is Soul Survivor" x:Name="IsSoulSurvivorOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.IsSoulSurvivor}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.IsSoulSurvivor}, Mode=OneWay}" />
+                <MenuItem Header="_Proximity" x:Name="ProximityOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.Proximity}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.Proximity}, Mode=OneWay}" />
+                <MenuItem Header="_Proximity To Me" x:Name="ProximityToMeOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.ProximityToMe}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.ProximityToMe}, Mode=OneWay}" />
+                <MenuItem Header="_Proximity To Teammate" x:Name="ProximityToTeammateOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.ProximityToTeammate}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.ProximityToTeammate}, Mode=OneWay}" />
+                <MenuItem Header="_Skill-based Matchmaking" x:Name="SkillBasedOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.SkillBased}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.SkillBased}, Mode=OneWay}" />
+                <MenuItem Header="_Team Extraction" x:Name="TeamExtractionOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.TeamExtraction}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.TeamExtraction}, Mode=OneWay}" />
+                <MenuItem Header="_Profile ID" x:Name="ProfileIdOption"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.ProfileId}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.ProfileId}, Mode=OneWay}" />
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_About" Command="{Binding AboutCommand}"
@@ -109,7 +199,8 @@
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type GroupItem}">
-                                        <Expander IsExpanded="True" d:DataContext="{d:DesignInstance CollectionViewGroup}">
+                                        <Expander IsExpanded="True"
+                                                  d:DataContext="{d:DesignInstance CollectionViewGroup}">
                                             <Expander.Header>
                                                 <emoji:TextBlock>
                                                     <emoji:TextBlock.Text>
@@ -159,7 +250,7 @@
                             <DataGrid AutoGenerateColumns="False"
                                       CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True"
                                       ItemsSource="{Binding Members}"
-                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                       ScrollViewer.VerticalScrollBarVisibility="Disabled" HeadersVisibility="Column">
                                 <behaviors:Interaction.Behaviors>
                                     <viewAddons:BubbleScrollEvent />
@@ -184,8 +275,10 @@
                                     </Style>
                                 </DataGrid.CellStyle>
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
-                                    <DataGridTemplateColumn Header="MMR" Width="Auto">
+                                    <DataGridTextColumn Header="Name" Binding="{Binding BloodLineName}" Width="*"
+                                                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference BloodLineNameOption}}" />
+                                    <DataGridTemplateColumn Header="MMR" Width="Auto"
+                                                            Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference MmrOption}}">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate DataType="models:HuntPlayer">
                                                 <TextBlock Text="{Binding Mmr}"
@@ -206,7 +299,8 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn Header="Stars" Width="Auto">
+                                    <DataGridTemplateColumn Header="Stars" Width="Auto"
+                                                            Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference MmrOption}}">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate DataType="models:HuntPlayer">
                                                 <StackPanel Orientation="Horizontal">
@@ -226,7 +320,14 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn Header="Bounty Carrier" Width="Auto">
+                                    <DataGridTextColumn Header="Bounty Extracted" Binding="{Binding BountyExtracted}"
+                                                        Width="Auto"
+                                                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference BountyExtractedOption}}" />
+                                    <DataGridTextColumn Header="Bounty Picked Up" Binding="{Binding BountyPickedUp}"
+                                                        Width="Auto"
+                                                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference BountyPickedUpOption}}" />
+                                    <DataGridTemplateColumn Header="Had Bounty" Width="Auto"
+                                                            Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference HadBountyOption}}">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate DataType="models:HuntPlayer">
                                                 <emoji:TextBlock
@@ -235,19 +336,117 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn Header="Wellspring" Width="Auto">
+                                    <DataGridTemplateColumn Header="Had Wellspring" Width="Auto"
+                                                            Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference HadWellspringOption}}">
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate DataType="models:HuntPlayer">
                                                 <emoji:TextBlock
-                                                    Text="{Binding HadWellSpring, Converter={StaticResource BooleanToEmoticonConverter}}"
+                                                    Text="{Binding HadWellspring, Converter={StaticResource BooleanToEmoticonConverter}}"
                                                     HorizontalAlignment="Center" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Downed by me X times" Binding="{Binding DownedByMe}"
+                                                        Width="Auto"
+                                                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference DownedByMeOption}}" />
+                                    <DataGridTextColumn Header="Downed by teammate X times"
+                                                        Binding="{Binding DownedByTeammate}"
+                                                        Width="Auto"
+                                                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference DownedByTeammateOption}}" />
+                                    <DataGridTextColumn Header="Downed me X times" Binding="{Binding DownedMe}"
+                                                        Width="Auto"
+                                                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference DownedMeOption}}" />
+                                    <DataGridTextColumn Header="Downed teammate X times"
+                                                        Binding="{Binding DownedTeammate}"
+                                                        Width="Auto"
+                                                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference DownedTeammateOption}}" />
                                     <DataGridTextColumn Header="Killed by me X times" Binding="{Binding KilledByMe}"
-                                                        Width="Auto" />
+                                                        Width="Auto"
+                                                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference KilledByMeOption}}" />
+                                    <DataGridTextColumn Header="Killed by teammate X times"
+                                                        Binding="{Binding KilledByTeammate}"
+                                                        Width="Auto"
+                                                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference KilledByTeammateOption}}" />
                                     <DataGridTextColumn Header="Killed me X times" Binding="{Binding KilledMe}"
-                                                        Width="Auto" />
+                                                        Width="Auto"
+                                                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference KilledMeOption}}" />
+                                    <DataGridTextColumn Header="Killed teammate X times"
+                                                        Binding="{Binding KilledTeammate}"
+                                                        Width="Auto"
+                                                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference KilledTeammateOption}}" />
+                                    <DataGridTemplateColumn Header="Is Partner" Width="Auto"
+                                                            Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference IsPartnerOption}}">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate DataType="models:HuntPlayer">
+                                                <emoji:TextBlock
+                                                    Text="{Binding IsPartner, Converter={StaticResource BooleanToEmoticonConverter}}"
+                                                    HorizontalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Is Soul Survivor" Width="Auto"
+                                                            Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference IsSoulSurvivorOption}}">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate DataType="models:HuntPlayer">
+                                                <emoji:TextBlock
+                                                    Text="{Binding IsSoulSurvivor, Converter={StaticResource BooleanToEmoticonConverter}}"
+                                                    HorizontalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Proximity" Width="Auto"
+                                                            Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference ProximityOption}}">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate DataType="models:HuntPlayer">
+                                                <emoji:TextBlock
+                                                    Text="{Binding Proximity, Converter={StaticResource BooleanToEmoticonConverter}}"
+                                                    HorizontalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Proximity To Me" Width="Auto"
+                                                            Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference ProximityToMeOption}}">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate DataType="models:HuntPlayer">
+                                                <emoji:TextBlock
+                                                    Text="{Binding ProximityToMe, Converter={StaticResource BooleanToEmoticonConverter}}"
+                                                    HorizontalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Proximity To Teammate" Width="Auto"
+                                                            Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference ProximityToTeammateOption}}">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate DataType="models:HuntPlayer">
+                                                <emoji:TextBlock
+                                                    Text="{Binding ProximityToTeammate, Converter={StaticResource BooleanToEmoticonConverter}}"
+                                                    HorizontalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Skill-based Matchmaking" Width="Auto"
+                                                            Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference SkillBasedOption}}">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate DataType="models:HuntPlayer">
+                                                <emoji:TextBlock
+                                                    Text="{Binding SkillBased, Converter={StaticResource BooleanToEmoticonConverter}}"
+                                                    HorizontalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Team Extraction" Width="Auto"
+                                                            Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference TeamExtractionOption}}">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate DataType="models:HuntPlayer">
+                                                <emoji:TextBlock
+                                                    Text="{Binding TeamExtraction, Converter={StaticResource BooleanToEmoticonConverter}}"
+                                                    HorizontalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Profile ID" Binding="{Binding ProfileId}"
+                                                        Width="Auto"
+                                                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference ProfileIdOption}}" />
                                 </DataGrid.Columns>
                             </DataGrid>
                         </DataTemplate>
