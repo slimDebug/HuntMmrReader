@@ -41,7 +41,7 @@ It tells you the MMR ranges for the current rank and how much MMR points are mis
 
 ## Toggleable Columns
 
-This program lets you toggle columns as you wish. You are able to toggle every column in the _Settings_ menu tab. It should look like something like that:
+This program lets you toggle columns as you wish. You are able to toggle every column in the _Settings_ menu tab. It should look like this:
 ![toggleable-columns-image](https://user-images.githubusercontent.com/66317138/179780008-3a1d8256-661a-442a-827e-04013681bc38.png)
 Just select what columns you want to hide/show.
 
