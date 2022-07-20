@@ -37,7 +37,7 @@ namespace HuntMmrReader.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("32769")]
         public int DisplayOptions {
             get {
                 return ((int)(this["DisplayOptions"]));
