@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -126,12 +127,95 @@ internal class MainWindowViewModel : ViewModelBase
         }
         catch
         {
-            FilePath = "";
+            FilePath = string.Empty;
             _displayOptions = PlayerOptions.None;
         }
     }
 
     private void HandleOption(PlayerOptions option)
+    {
+        switch (option)
+        {
+            case PlayerOptions.None:
+            case PlayerOptions.All:
+                DisplayOptions = option;
+                break;
+            case PlayerOptions.BloodLineName:
+            case PlayerOptions.BountyExtracted:
+            case PlayerOptions.BountyPickedUp:
+            case PlayerOptions.HadWellspring:
+            case PlayerOptions.HadBounty:
+            case PlayerOptions.IsPartner:
+            case PlayerOptions.IsSoulSurvivor:
+            case PlayerOptions.Mmr:
+            case PlayerOptions.ProfileId:
+            case PlayerOptions.Proximity:
+            case PlayerOptions.ProximityToMe:
+            case PlayerOptions.ProximityToTeammate:
+            case PlayerOptions.SkillBased:
+            case PlayerOptions.TeamExtraction:
+                ToggleOption(option);
+                break;
+            // OverallKilledByMe option handling
+            case PlayerOptions.DownedByMe:
+            case PlayerOptions.KilledByMe:
+                if (DisplayOptions.HasFlag(PlayerOptions.OverallKilledByMe))
+                    DisplayOptions &= ~PlayerOptions.OverallKilledByMe;
+                ToggleOption(option);
+                break;
+            case PlayerOptions.OverallKilledByMe:
+                foreach (var opt in new[] {PlayerOptions.DownedByMe, PlayerOptions.KilledByMe})
+                    if (DisplayOptions.HasFlag(opt))
+                        DisplayOptions &= ~opt;
+                ToggleOption(option);
+                break;
+            // OverallKilledByTeammate option handling
+            case PlayerOptions.DownedByTeammate:
+            case PlayerOptions.KilledByTeammate:
+                if (DisplayOptions.HasFlag(PlayerOptions.OverallKilledByTeammate))
+                    DisplayOptions &= ~PlayerOptions.OverallKilledByTeammate;
+                ToggleOption(option);
+                break;
+            case PlayerOptions.OverallKilledByTeammate:
+                foreach (var opt in new[] {PlayerOptions.DownedByTeammate, PlayerOptions.KilledByTeammate})
+                    if (DisplayOptions.HasFlag(opt))
+                        DisplayOptions &= ~opt;
+                ToggleOption(option);
+                break;
+            // OverallKilledMe option handling
+            case PlayerOptions.DownedMe:
+            case PlayerOptions.KilledMe:
+                if (DisplayOptions.HasFlag(PlayerOptions.OverallKilledMe))
+                    DisplayOptions &= ~PlayerOptions.OverallKilledMe;
+                ToggleOption(option);
+                break;
+            case PlayerOptions.OverallKilledMe:
+                foreach (var opt in new[] {PlayerOptions.DownedMe, PlayerOptions.KilledMe})
+                    if (DisplayOptions.HasFlag(opt))
+                        DisplayOptions &= ~opt;
+                ToggleOption(option);
+                break;
+            // OverallKilledTeammate option handling
+            case PlayerOptions.DownedTeammate:
+            case PlayerOptions.KilledTeammate:
+                if (DisplayOptions.HasFlag(PlayerOptions.OverallKilledTeammate))
+                    DisplayOptions &= ~PlayerOptions.OverallKilledTeammate;
+                ToggleOption(option);
+                break;
+            case PlayerOptions.OverallKilledTeammate:
+                foreach (var opt in new[] {PlayerOptions.DownedTeammate, PlayerOptions.KilledTeammate})
+                    if (DisplayOptions.HasFlag(opt))
+                        DisplayOptions &= ~opt;
+                ToggleOption(option);
+                break;
+            default:
+                AddException(new ArgumentOutOfRangeException(nameof(option), option,
+                    $"{((int) option).ToString(CultureInfo.InvariantCulture)} is not a valid {nameof(option)} value."));
+                break;
+        }
+    }
+
+    private void ToggleOption(PlayerOptions option)
     {
         if (DisplayOptions.HasFlag(option))
             DisplayOptions &= ~option;

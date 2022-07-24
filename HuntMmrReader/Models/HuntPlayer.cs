@@ -85,6 +85,10 @@ public class HuntPlayer : HuntBaseEntity
     public bool ProximityToTeammate { get; }
     public bool SkillBased { get; }
     public bool TeamExtraction { get; }
+    public ushort OverallKilledByMe => (ushort) (DownedByMe + KilledByMe);
+    public ushort OverallKilledByTeammate => (ushort) (KilledByTeammate + DownedByTeammate);
+    public ushort OverallKilledMe => (ushort) (KilledMe + DownedMe);
+    public ushort OverallKilledTeammate => (ushort) (KilledTeammate + DownedTeammate);
 
     public override string ToString()
     {
