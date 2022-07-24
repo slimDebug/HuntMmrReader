@@ -78,9 +78,21 @@ internal enum PlayerOptions
     ///<summary>This should be a bool.</summary>
     [Description("teamextraction")] TeamExtraction = 2097152,
 
+    ///<summary>This should be a ulong.</summary>
+    OverallKilledByMe = 4194304,
+
+    ///<summary>This should be a ulong.</summary>
+    OverallKilledByTeammate = 8388608,
+
+    ///<summary>This should be a ulong.</summary>
+    OverallKilledMe = 16777216,
+
+    ///<summary>This should be a ulong.</summary>
+    OverallKilledTeammate = 33554432,
+
     ///<summary>All values combined.</summary>
     All = BloodLineName | BountyExtracted | BountyPickedUp | DownedByMe | DownedByTeammate | DownedMe | DownedTeammate |
           HadWellspring | HadBounty | IsPartner | IsSoulSurvivor | KilledByMe | KilledByTeammate | KilledMe |
           KilledTeammate | Mmr | ProfileId | Proximity | ProximityToMe | ProximityToTeammate | SkillBased |
-          TeamExtraction
+          TeamExtraction | OverallKilledByMe | OverallKilledByTeammate | OverallKilledMe | OverallKilledTeammate
 }

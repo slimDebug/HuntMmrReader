@@ -69,6 +69,25 @@
                 <MenuItem Header="_MMR" x:Name="MmrOption" Command="{Binding SetUnsetDisplayOptionsCommand}"
                           CommandParameter="{x:Static enums:PlayerOptions.Mmr}" StaysOpenOnClick="True"
                           IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.Mmr}, Mode=OneWay}" />
+                <MenuItem Header="_Overall Killed By Me" x:Name="OverallKilledByMeOption" FontStyle="Italic"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.OverallKilledByMe}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.OverallKilledByMe}, Mode=OneWay}" />
+                <MenuItem Header="_Overall Killed By Teammate" x:Name="OverallKilledByTeammateOption"
+                          FontStyle="Italic"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.OverallKilledByTeammate}"
+                          StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.OverallKilledByTeammate}, Mode=OneWay}" />
+                <MenuItem Header="_Overall Killed Me" x:Name="OverallKilledMeOption" FontStyle="Italic"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.OverallKilledMe}" StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.OverallKilledMe}, Mode=OneWay}" />
+                <MenuItem Header="_Overall Killed Teammate" x:Name="OverallKilledTeammateOption" FontStyle="Italic"
+                          Command="{Binding SetUnsetDisplayOptionsCommand}"
+                          CommandParameter="{x:Static enums:PlayerOptions.OverallKilledTeammate}"
+                          StaysOpenOnClick="True"
+                          IsChecked="{Binding DisplayOptions, Converter={StaticResource PlayerOptionsToBooleanConverter}, ConverterParameter={x:Static enums:PlayerOptions.OverallKilledTeammate}, Mode=OneWay}" />
                 <MenuItem Header="_Bounty Extracted" x:Name="BountyExtractedOption"
                           Command="{Binding SetUnsetDisplayOptionsCommand}"
                           CommandParameter="{x:Static enums:PlayerOptions.BountyExtracted}" StaysOpenOnClick="True"
@@ -275,7 +294,7 @@
                                     </Style>
                                 </DataGrid.CellStyle>
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Name" Binding="{Binding BloodLineName}" Width="*"
+                                    <DataGridTextColumn Header="Name" Binding="{Binding BloodLineName}" Width="Auto"
                                                         Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference BloodLineNameOption}}" />
                                     <DataGridTemplateColumn Header="MMR" Width="Auto"
                                                             Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference MmrOption}}">
@@ -346,16 +365,32 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Overall killed by me X times"
+                                                        Binding="{Binding OverallKilledByMe}"
+                                                        Width="Auto"
+                                                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference OverallKilledByMeOption}}" />
                                     <DataGridTextColumn Header="Downed by me X times" Binding="{Binding DownedByMe}"
                                                         Width="Auto"
                                                         Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference DownedByMeOption}}" />
+                                    <DataGridTextColumn Header="Overall killed by teammate X times"
+                                                        Binding="{Binding OverallKilledByTeammate}"
+                                                        Width="Auto"
+                                                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference OverallKilledByTeammateOption}}" />
                                     <DataGridTextColumn Header="Downed by teammate X times"
                                                         Binding="{Binding DownedByTeammate}"
                                                         Width="Auto"
                                                         Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference DownedByTeammateOption}}" />
+                                    <DataGridTextColumn Header="Overall killed me X times"
+                                                        Binding="{Binding OverallKilledMe}"
+                                                        Width="Auto"
+                                                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference OverallKilledMeOption}}" />
                                     <DataGridTextColumn Header="Downed me X times" Binding="{Binding DownedMe}"
                                                         Width="Auto"
                                                         Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference DownedMeOption}}" />
+                                    <DataGridTextColumn Header="Overall killed teammate X times"
+                                                        Binding="{Binding OverallKilledTeammate}"
+                                                        Width="Auto"
+                                                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, Source={x:Reference OverallKilledTeammateOption}}" />
                                     <DataGridTextColumn Header="Downed teammate X times"
                                                         Binding="{Binding DownedTeammate}"
                                                         Width="Auto"
